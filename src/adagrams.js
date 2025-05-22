@@ -28,25 +28,36 @@ const letterPool = {
 }
 
 export const drawLetters = () => {
-  const pool = []; // create a pool array of letters based on frequency
+  const pool = []; 
   for(let letter in letterPool) {
     for (let i = 0; i < letterPool[letter]; i++) {
       pool.push(letter);
     }
   };
   
-  const hand = [];
+  const lettersInHand = [];
   for (let i = 0; i < 10; i++) {
     const index = Math.floor(Math.random() * pool.length);
     const letter = pool[index];
-    hand.push(letter);
+    lettersInHand.push(letter);
     pool.splice(index, 1);
   }
-  return hand;
+  return lettersInHand;
 };
 
 export const usesAvailableLetters = (input, lettersInHand) => {
-  // Implement this method for wave 2
+  const word = input.toUpperCase();
+  const copyLettersInHand = [...lettersInHand];
+
+  for (let letter of word) {
+    const index = copyLettersInHand.indexOf(letter);
+    if (index === -1) {
+      return false;
+    }
+    copyLettersInHand.splice(index, 1);
+  }
+
+  return true;
 };
 
 export const scoreWord = (word) => {
