@@ -1,6 +1,48 @@
+const letterPool = {
+  'A': 9, 
+  'B': 2, 
+  'C': 2, 
+  'D': 4, 
+  'E': 12, 
+  'F': 2, 
+  'G': 3, 
+  'H': 2, 
+  'I': 9, 
+  'J': 1, 
+  'K': 1, 
+  'L': 4, 
+  'M': 2, 
+  'N': 6, 
+  'O': 8, 
+  'P': 2, 
+  'Q': 1, 
+  'R': 6, 
+  'S': 4, 
+  'T': 6, 
+  'U': 4, 
+  'V': 2, 
+  'W': 2, 
+  'X': 1, 
+  'Y': 2, 
+  'Z': 1
+}
+
 export const drawLetters = () => {
-  // test 
-  // Implement this method for wave 1
+  const pool = []; // create a pool array of letters based on frequency
+  for(let letter in letterPool) {
+    for (let i = 0; i < letterPool[letter]; i++) {
+      pool.push(letter);
+    }
+  };
+  
+  const hand = [];
+  for (let i = 0; i < 10; i++) {
+    const index = Math.floor(Math.random() * pool.length);
+    const letter = pool[index];
+    hand.push(letter);
+    pool.splice(index, 1);
+  }
+  return hand;
 };
 
 export const usesAvailableLetters = (input, lettersInHand) => {
