@@ -64,7 +64,7 @@ export const scoreWord = (word) => {
   if (!word) {
     return 0;
   };
-  
+
   const letterPoints = {
     'A': 1, 
     'B': 3, 
@@ -109,5 +109,27 @@ export const scoreWord = (word) => {
 };
 
 export const highestScoreFrom = (words) => {
-  // Implement this method for wave 4
+  let bestWord = '';
+  let highestScore = 0;
+
+  for (let word of words) {
+    const currentScore = scoreWord(word);
+
+    if (currentScore > highestScore) {
+      bestWord = word;
+      highestScore = currentScore;
+    } else if (currentScore === highestScore) {
+      // Tie-breaking
+      if (bestWord.length !== 10 && word.length === 10) {
+        bestWord = word;
+      } else if (
+        bestWord.length !== 10 &&
+        word.length < bestWord.length
+      ) {
+        bestWord = word;
+      }
+    }
+  }
+
+  return { word: bestWord, score: highestScore };
 };
