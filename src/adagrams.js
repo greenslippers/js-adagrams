@@ -47,16 +47,19 @@ export const drawLetters = () => {
 
 export const usesAvailableLetters = (input, lettersInHand) => {
   const word = input.toUpperCase();
-  const copyLettersInHand = [...lettersInHand];
+  
+  const letterCount = {};
 
-  for (let letter of word) {
-    const index = copyLettersInHand.indexOf(letter);
-    if (index === -1) {
-      return false;
-    }
-    copyLettersInHand.splice(index, 1);
+  for (let letter of lettersInHand) {
+    letterCount[letter] = (letterCount[letter] || 0) + 1;
   }
 
+  for (let char of word) {
+    if (!letterCount[char]) {
+      return false;
+    }
+    letterCount[char] -= 1;
+  }
   return true;
 };
 
