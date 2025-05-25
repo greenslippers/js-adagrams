@@ -1,65 +1,70 @@
-const letterPool = {
-  'A': 9, 
-  'B': 2, 
-  'C': 2, 
-  'D': 4, 
-  'E': 12, 
-  'F': 2, 
-  'G': 3, 
-  'H': 2, 
-  'I': 9, 
-  'J': 1, 
-  'K': 1, 
-  'L': 4, 
-  'M': 2, 
-  'N': 6, 
-  'O': 8, 
-  'P': 2, 
-  'Q': 1, 
-  'R': 6, 
-  'S': 4, 
-  'T': 6, 
-  'U': 4, 
-  'V': 2, 
-  'W': 2, 
-  'X': 1, 
-  'Y': 2, 
-  'Z': 1
-}
-
 export const drawLetters = () => {
-  const pool = []; 
+  const letterPool = {
+    'A': 9, 
+    'B': 2, 
+    'C': 2, 
+    'D': 4, 
+    'E': 12, 
+    'F': 2, 
+    'G': 3, 
+    'H': 2, 
+    'I': 9, 
+    'J': 1, 
+    'K': 1, 
+    'L': 4, 
+    'M': 2, 
+    'N': 6, 
+    'O': 8, 
+    'P': 2, 
+    'Q': 1, 
+    'R': 6, 
+    'S': 4, 
+    'T': 6, 
+    'U': 4, 
+    'V': 2, 
+    'W': 2, 
+    'X': 1, 
+    'Y': 2, 
+    'Z': 1
+  }  
+
+  const letterBank = []; 
   for(let letter in letterPool) {
     for (let i = 0; i < letterPool[letter]; i++) {
-      pool.push(letter);
+      letterBank.push(letter);
     }
   };
-  
+
   const lettersInHand = [];
   for (let i = 0; i < 10; i++) {
-    const index = Math.floor(Math.random() * pool.length);
-    const letter = pool[index];
+    const index = Math.floor(Math.random() * letterBank.length);
+    const letter = letterBank[index];
     lettersInHand.push(letter);
-    pool.splice(index, 1);
+    letterBank.splice(index, 1);
   }
   return lettersInHand;
 };
 
 export const usesAvailableLetters = (input, lettersInHand) => {
   const word = input.toUpperCase();
-  
   const letterCount = {};
 
   for (let letter of lettersInHand) {
-    letterCount[letter] = (letterCount[letter] || 0) + 1;
-  }
+    if (letter in letterCount) {
+      letterCount[letter] += 1;
+    } else {
+      letterCount[letter] = 1;
+    };
+  };
 
-  for (let char of word) {
-    if (!letterCount[char]) {
+  for (let letter of word) {
+    if (letter in letterCount && letterCount[letter] > 0) {
+      letterCount[letter] -= 1;
+    } else {
       return false;
-    }
-    letterCount[char] -= 1;
-  }
+    };
+  };
+  
   return true;
 };
 
@@ -122,17 +127,14 @@ export const highestScoreFrom = (words) => {
       bestWord = word;
       highestScore = currentScore;
     } else if (currentScore === highestScore) {
-      // Tie-breaking
-      if (bestWord.length !== 10 && word.length === 10) {
+      const isNewWordTen = word.length === 10 && bestWord.length !== 10;
+      const isNewWordShorter = word.length < bestWord.length && bestWord.length !== 10;
+
+      if (isNewWordTen || isNewWordShorter) {
         bestWord = word;
-      } else if (
-        bestWord.length !== 10 &&
-        word.length < bestWord.length
-      ) {
-        bestWord = word;
-      }
-    }
-  }
+      };
+    };
+  };
 
   return { word: bestWord, score: highestScore };
 };
